@@ -1,0 +1,9 @@
+[submodule "extern/libjsonpath"]
+	path = extern/libjsonpath
+	url = git@github.com:jg-rp/libjsonpath.git
+[submodule "extern/nanobind"]
+	path = extern/nanobind
+	url = git@github.com:wjakob/nanobind.git
+[submodule "tests/cts"]
+	path = tests/cts
+	url = git@github.com:jsonpath-standard/jsonpath-compliance-test-suite.git
