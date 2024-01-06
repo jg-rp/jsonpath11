@@ -64,7 +64,7 @@ NB_MODULE(_jsonpath24, m) {
       .value("le", libjsonpath::TokenType::le)
       .value("lparen", libjsonpath::TokenType::lparen)
       .value("lt", libjsonpath::TokenType::lt)
-      .value("name", libjsonpath::TokenType::name_)
+      .value("name_", libjsonpath::TokenType::name_)
       .value("ne", libjsonpath::TokenType::ne)
       .value("not_", libjsonpath::TokenType::not_)
       .value("null_", libjsonpath::TokenType::null_)
