@@ -36,6 +36,7 @@ from ._jsonpath24 import singular_query
 from ._jsonpath24 import to_string
 
 from .__about__ import __version__
+from ._nothing import Nothing
 from ._nothing import NOTHING
 from .filter_function import FilterFunction
 from ._path import JSONPath
@@ -70,6 +71,7 @@ __all__ = (
     "LogicalNotExpression",
     "NameSelector",
     "NOTHING",
+    "Nothing",
     "NullLiteral",
     "parse",
     "Parser",

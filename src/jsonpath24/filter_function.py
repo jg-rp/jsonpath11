@@ -8,7 +8,7 @@ from typing import Any
 from typing import Tuple
 
 if TYPE_CHECKING:
-    from libjsonpath import ExpressionType
+    from jsonpath24 import ExpressionType
 
 
 class FilterFunction(ABC):

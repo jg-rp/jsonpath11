@@ -8,6 +8,8 @@ from typing import overload
 
 from ._env import JSONPathEnvironment
 from ._path import JSONPath
+from ._nothing import NOTHING
+from ._nothing import Nothing
 from .filter_function import FilterFunction
 
 __all__ = (
@@ -37,6 +39,7 @@ __all__ = (
     "LogicalNotExpression",
     "NameSelector",
     "NOTHING",
+    "Nothing",
     "NullLiteral",
     "parse",
     "Parser",
@@ -329,4 +332,3 @@ def compile(path: str) -> JSONPath: ...
 def findall(path: str, data: object) -> List[object]: ...
 def query(path: str, data: object) -> List[JSONPathNode]: ...
 
-NOTHING = object()
