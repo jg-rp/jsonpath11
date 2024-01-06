@@ -1,0 +1,5 @@
+black==23.12.1
+mypy==1.8.0
+pytest==7.4.4
+ruff==0.1.11
+scikit_build_core[pyproject]==0.7.1
