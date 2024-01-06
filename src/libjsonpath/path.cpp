@@ -44,7 +44,7 @@ bool is_truthy(const expression_rv& rv) {
   }
 
   auto value{std::get<nb::object>(rv)};
-  return !(nb::isinstance<nb::bool_()>(value) && !nb::cast<nb::bool_>(value));
+  return !(nb::isinstance<nb::bool_>(value) && !nb::cast<nb::bool_>(value));
 }
 
 // Visit every object with _node.value_ at the root.
@@ -415,14 +415,14 @@ public:
   }
 
   void operator()(const SliceSelector& selector) {
-    if (nb::isinstance<nb::list>(m_node.value) && selector.step) {
+    if (nb::isinstance<nb::list>(m_node.value)) {
       auto obj{nb::cast<nb::list>(m_node.value)};
       for (auto i : slice_indicies(selector, obj.size())) {
         auto item{obj[i]};
         nb::object val = nb::cast<nb::object>(item);
-        // auto norm_index{normalized_index(nb::len(obj), i, selector.token)};
+        auto norm_index{normalized_index(nb::len(obj), i, selector.token)};
         location_t location{m_node.location};
-        location.push_back(i);  // TODO: is norm_index needed?
+        location.push_back(norm_index);
         m_out_nodes->push_back(JSONPathNode{val, location});
       }
     }
@@ -462,42 +462,48 @@ public:
   }
 
 private:
-  std::vector<size_t> slice_indicies(const SliceSelector& selector,
-                                     size_t size) {
-    // Handles step explicitly set to zero too.
-    if (!size || !selector.step.value_or(0)) {
+  std::vector<int64_t> slice_indicies(const SliceSelector& selector,
+                                      size_t size) {
+    if (!size) {
       return {};
     }
 
-    size_t start{0};
-    size_t stop{size};
+    std::int64_t length = static_cast<std::int64_t>(size);
+    std::int64_t start{0};
+    std::int64_t stop{length};
     std::int64_t step{selector.step.value_or(1)};
+
+    if (step == 0) {
+      return {};
+    }
 
     // Handle negative start values.
     if (!selector.start) {
-      start = step < 0 ? size - 1 : 0UL;
+      start = step < 0 ? length - 1 : 0UL;
     } else if (selector.start.value() < 0) {
-      start = std::max(size + selector.start.value(), 0UL);
+      start = std::max(length + selector.start.value(), 0L);
     } else {
-      start = std::min(static_cast<size_t>(selector.start.value()), size - 1);
+      start = std::min(selector.start.value(), length - 1);
     }
 
     // Handle negative stop values
     if (!selector.stop) {
       stop = step < 0 ? -1 : size;
-    } else if (selector.stop < 0) {
-      stop = std::max(size + selector.stop.value(), -1UL);
+    } else if (selector.stop.value() < 0) {
+      stop = std::max(length + selector.stop.value(), -1L);
     } else {
-      stop = std::min(static_cast<size_t>(selector.stop.value()), size);
+      stop = std::min(selector.stop.value(), length);
     }
 
-    std::vector<size_t> indicies{};
+    // TODO: return start, stp and step
+    // TODO: then loop in the caller
+    std::vector<std::int64_t> indicies{};
     if (step > 0) {
-      for (size_t i = start; i < stop; i += step) {
+      for (int64_t i = start; i < stop; i += step) {
         indicies.push_back(i);
       }
     } else {
-      for (size_t i = start; i > stop; i += step) {
+      for (int64_t i = start; i > stop; i += step) {
         indicies.push_back(i);
       }
     }

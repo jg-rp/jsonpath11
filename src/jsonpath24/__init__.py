@@ -11,13 +11,11 @@ from ._jsonpath24 import FunctionSignatureMap
 from ._jsonpath24 import IndexSelector
 from ._jsonpath24 import InfixExpression
 from ._jsonpath24 import IntegerLiteral
-
-# from ._jsonpath24 import JSONPathException
-# from ._jsonpath24 import JSONPathLexerError
+from ._jsonpath24 import JSONPathException
+from ._jsonpath24 import JSONPathLexerError
 from ._jsonpath24 import JSONPathNode
-
-# from ._jsonpath24 import JSONPathSyntaxError
-# from ._jsonpath24 import JSONPathTypeError
+from ._jsonpath24 import JSONPathSyntaxError
+from ._jsonpath24 import JSONPathTypeError
 from ._jsonpath24 import Lexer
 from ._jsonpath24 import LogicalNotExpression
 from ._jsonpath24 import NameSelector
@@ -63,11 +61,11 @@ __all__ = (
     "IntegerLiteral",
     "JSONPath",
     "JSONPathEnvironment",
-    # "JSONPathException",
-    # "JSONPathLexerError",
+    "JSONPathException",
+    "JSONPathLexerError",
     "JSONPathNode",
-    # "JSONPathSyntaxError",
-    # "JSONPathTypeError",
+    "JSONPathSyntaxError",
+    "JSONPathTypeError",
     "Lexer",
     "LogicalNotExpression",
     "NameSelector",

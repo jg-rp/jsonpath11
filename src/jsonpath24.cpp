@@ -19,6 +19,7 @@
 #include "nanobind/stl/string.h"
 #include "nanobind/stl/string_view.h"
 #include "nanobind/stl/unordered_map.h"
+#include "nanobind/stl/variant.h"
 #include "nanobind/stl/vector.h"
 
 namespace nb = nanobind;
@@ -32,6 +33,14 @@ NB_MODULE(_jsonpath24, m) {
   nb::bind_vector<libjsonpath::JSONPathNodeList>(m, "JSONPathNodeList");
   nb::bind_map<libjsonpath::function_signature_map>(m, "FunctionSignatureMap");
   nb::bind_map<libjsonpath::function_extension_map>(m, "FunctionExtensionMap");
+
+  auto base_exception = nb::exception<libjsonpath::Exception>(m, "JSONPathException");
+  nb::exception<libjsonpath::LexerError>(m, "JSONPathLexerError", base_exception.ptr());
+  nb::exception<libjsonpath::SyntaxError>(m, "JSONPathSyntaxError", base_exception.ptr());
+  nb::exception<libjsonpath::TypeError>(m, "JSONPathTypeError", base_exception.ptr());
+  nb::exception<libjsonpath::IndexError>(m, "JSONPathIndexError", base_exception.ptr());
+  nb::exception<libjsonpath::NameError>(m, "JSONPathNameError", base_exception.ptr());
+  nb::exception<libjsonpath::EncodingError>(m, "JSONPathEncodingError", base_exception.ptr());
 
   nb::enum_<libjsonpath::TokenType>(m, "TokenType")
       .value("eof_", libjsonpath::TokenType::eof_)
