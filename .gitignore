@@ -30,4 +30,4 @@ build
 build_bench
 build_benchmark
 .vscode
-.venv
+.venv*
