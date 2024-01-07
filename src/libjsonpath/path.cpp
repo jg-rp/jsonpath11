@@ -481,7 +481,7 @@ private:
     if (!selector.start) {
       start = step < 0 ? length - 1 : 0UL;
     } else if (selector.start.value() < 0) {
-      start = std::max(length + selector.start.value(), 0L);
+      start = std::max(length + selector.start.value(), std::int64_t{0});
     } else {
       start = std::min(selector.start.value(), length - 1);
     }
@@ -490,7 +490,7 @@ private:
     if (!selector.stop) {
       stop = step < 0 ? -1 : size;
     } else if (selector.stop.value() < 0) {
-      stop = std::max(length + selector.stop.value(), -1L);
+      stop = std::max(length + selector.stop.value(), std::int64_t{-1});
     } else {
       stop = std::min(selector.stop.value(), length);
     }
