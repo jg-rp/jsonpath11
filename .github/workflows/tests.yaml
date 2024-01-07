@@ -4,8 +4,8 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Build with Pip
-    runs-on: ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+    name: ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
