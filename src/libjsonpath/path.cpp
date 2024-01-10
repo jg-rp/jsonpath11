@@ -399,9 +399,14 @@ public:
       auto obj{nb::cast<nb::dict>(m_node.value)};
       for (auto item : obj) {
         nb::str key{item.first};
+        nb::print(".. key ..");
+        nb::print(key);
         nb::object val = nb::cast<nb::object>(item.second);
+        nb::print(".. value ..");
+        nb::print(val);
         location_t location{m_node.location};
-        location.push_back(nb::cast<std::string>(item.first));
+        auto prop = nb::cast<std::string>(key);
+        location.push_back(prop);
         nb::print(".. push to location");
         m_out_nodes->push_back(JSONPathNode{val, location});
       }
