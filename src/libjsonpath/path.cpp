@@ -405,8 +405,8 @@ public:
         nb::print(".. value ..");
         nb::print(val);
         location_t location{m_node.location};
-        auto prop = nb::cast<std::string>(key);
-        location.push_back(prop);
+        char prop = nb::cast<char>(item.first);
+        location.push_back(std::to_string(prop));
         nb::print(".. push to location");
         m_out_nodes->push_back(JSONPathNode{val, location});
       }
