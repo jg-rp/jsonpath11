@@ -1,0 +1,29 @@
+name: debug
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    name: Debug macos
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Set min macOS version
+        if: runner.os == 'macOS'
+        run: |
+          echo "MACOS_DEPLOYMENT_TARGET=10.14" >> $GITHUB_ENV
+
+      - name: Build and install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install --verbose .
+
+      - name: Test
+        run: python debug.py
