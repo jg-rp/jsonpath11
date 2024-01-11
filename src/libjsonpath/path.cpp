@@ -360,9 +360,7 @@ private:
 public:
   SelectorVisitor(const QueryContext& q_ctx, const JSONPathNode& node,
                   std::vector<JSONPathNode>* out_nodes)
-      : m_query_context{q_ctx}, m_node{node}, m_out_nodes{out_nodes} {
-    nb::print(".. selector visitor");
-  }
+      : m_query_context{q_ctx}, m_node{node}, m_out_nodes{out_nodes} {}
 
   ~SelectorVisitor() = default;
 
@@ -395,19 +393,13 @@ public:
 
   void operator()(const WildSelector&) {
     if (nb::isinstance<nb::dict>(m_node.value)) {
-      nb::print(".. a dict");
       auto obj{nb::cast<nb::dict>(m_node.value)};
       for (auto item : obj) {
         nb::str key{item.first};
-        nb::print(".. key ..");
-        nb::print(key);
         nb::object val = nb::cast<nb::object>(item.second);
-        nb::print(".. value ..");
-        nb::print(val);
         location_t location{m_node.location};
-        char prop = nb::cast<char>(item.first);
-        location.push_back(std::to_string(prop));
-        nb::print(".. push to location");
+        std::string prop = nb::cast<std::string>(item.first, false);
+        location.push_back(prop);
         m_out_nodes->push_back(JSONPathNode{val, location});
       }
     } else if (nb::isinstance<nb::list>(m_node.value)) {
@@ -530,9 +522,7 @@ public:
   SegmentVisitor(const QueryContext& q_ctx,
                  const std::vector<JSONPathNode>& nodes,
                  std::vector<JSONPathNode>* out_nodes)
-      : m_context{q_ctx}, m_nodes{nodes}, m_out_nodes{out_nodes} {
-    nb::print(".. segment visitor constructor");
-  }
+      : m_context{q_ctx}, m_nodes{nodes}, m_out_nodes{out_nodes} {}
 
   ~SegmentVisitor() = default;
 
@@ -563,7 +553,6 @@ JSONPathNodeList resolve_segment(
     const QueryContext& q_ctx, const JSONPathNodeList& nodes,
     const std::variant<libjsonpath::Segment, libjsonpath::RecursiveSegment>&
         segment) {
-  nb::print(".. resolve segment");
   JSONPathNodeList out_nodes{};
   SegmentVisitor visitor{q_ctx, nodes, &out_nodes};
   std::visit(visitor, segment);
@@ -576,10 +565,8 @@ JSONPathNodeList resolve_segment(
 JSONPathNodeList query_(const segments_t& segments, nb::object obj,
                         function_extension_map functions,
                         function_signature_map signatures, nb::object nothing) {
-  nb::print(".. make query context");
   QueryContext q_ctx{obj, functions, signatures, nothing};
   // Bootstrap the node list with root object and an empty location.
-  nb::print(".. bootstrap nodes");
   JSONPathNodeList nodes{{obj, {}}};
   for (auto segment : segments) {
     nodes = resolve_segment(q_ctx, nodes, segment);
