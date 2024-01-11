@@ -47,16 +47,26 @@ bool is_truthy(const expression_rv& rv) {
   return !(nb::isinstance<nb::bool_>(value) && !nb::cast<nb::bool_>(value));
 }
 
+// Cast a python str to an std::string.
+std::string prop_to_cpp(const nb::handle& key) {
+  std::string rv{};
+  bool ok = nb::try_cast<std::string>(key, rv);
+  if (ok) {
+    return rv;
+  }
+
+  return ":(";
+}
+
 // Visit every object with _node.value_ at the root.
 void descend(const JSONPathNode& node, std::vector<JSONPathNode>& out_nodes) {
   out_nodes.push_back(node);
   if (nb::isinstance<nb::dict>(node.value)) {
     auto obj{nb::cast<nb::dict>(node.value)};
     for (auto item : obj) {
-      nb::str key{item.first};
       nb::object val = nb::cast<nb::object>(item.second);
       location_t location{node.location};
-      location.push_back(nb::cast<std::string>(item.first));
+      location.push_back(prop_to_cpp(item.first));
       descend({val, location}, out_nodes);
     }
   } else if (nb::isinstance<nb::list>(node.value)) {
@@ -395,11 +405,9 @@ public:
     if (nb::isinstance<nb::dict>(m_node.value)) {
       auto obj{nb::cast<nb::dict>(m_node.value)};
       for (auto item : obj) {
-        nb::str key{item.first};
         nb::object val = nb::cast<nb::object>(item.second);
         location_t location{m_node.location};
-        std::string prop = nb::cast<std::string>(item.first, false);
-        location.push_back(prop);
+        location.push_back(prop_to_cpp(item.first));
         m_out_nodes->push_back(JSONPathNode{val, location});
       }
     } else if (nb::isinstance<nb::list>(m_node.value)) {
@@ -439,7 +447,7 @@ public:
 
         if (is_truthy(std::visit(visitor, selector->expression))) {
           location_t location{m_node.location};
-          location.push_back(nb::cast<std::string>(item.first));
+          location.push_back(prop_to_cpp(item.first));
           m_out_nodes->push_back({val, location});
         }
       }

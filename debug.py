@@ -1,10 +1,17 @@
 import jsonpath24
 
+# t = {
+#     "name": "basic, wildcard shorthand, object data",
+#     "selector": "$.*",
+#     "document": {"a": "A", "b": "B"},
+#     "result": ["A", "B"],
+# }
+
 t = {
-    "name": "basic, wildcard shorthand, object data",
-    "selector": "$.*",
-    "document": {"a": "A", "b": "B"},
-    "result": ["A", "B"],
+    "name": "functions, value, single-value nodelist",
+    "selector": "$[?value(@.*)==4]",
+    "document": [[4], {"foo": 4}, [5], {"foo": 5}, 4],
+    "result": [[4], {"foo": 4}],
 }
 
 
