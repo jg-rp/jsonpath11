@@ -48,14 +48,19 @@ bool is_truthy(const expression_rv& rv) {
 }
 
 // Cast a python str to an std::string.
-std::string prop_to_cpp(const nb::handle& key) {
-  std::string rv{};
-  bool ok = nb::try_cast<std::string>(key, rv);
-  if (ok) {
-    return rv;
+std::string key_to_string(const nb::handle& key) {
+  if (!nb::isinstance<nb::str>(key)) {
+    auto repr = nb::repr(key);
+    std::string what =
+        "expected mapping with string keys, found "s + repr.c_str();
+    throw nb::type_error(what.c_str());
   }
 
-  return ":(";
+  // We kept getting std::bad_cast when trying to use nb::cast<std::string>,
+  // but only in some cases on some os/py versions.
+  std::string rv{};
+  nb::try_cast<std::string>(key, rv);
+  return rv;  // XXX: empty string if cast fails
 }
 
 // Visit every object with _node.value_ at the root.
@@ -66,7 +71,7 @@ void descend(const JSONPathNode& node, std::vector<JSONPathNode>& out_nodes) {
     for (auto item : obj) {
       nb::object val = nb::cast<nb::object>(item.second);
       location_t location{node.location};
-      location.push_back(prop_to_cpp(item.first));
+      location.push_back(key_to_string(item.first));
       descend({val, location}, out_nodes);
     }
   } else if (nb::isinstance<nb::list>(node.value)) {
@@ -407,7 +412,7 @@ public:
       for (auto item : obj) {
         nb::object val = nb::cast<nb::object>(item.second);
         location_t location{m_node.location};
-        location.push_back(prop_to_cpp(item.first));
+        location.push_back(key_to_string(item.first));
         m_out_nodes->push_back(JSONPathNode{val, location});
       }
     } else if (nb::isinstance<nb::list>(m_node.value)) {
@@ -447,7 +452,7 @@ public:
 
         if (is_truthy(std::visit(visitor, selector->expression))) {
           location_t location{m_node.location};
-          location.push_back(prop_to_cpp(item.first));
+          location.push_back(key_to_string(item.first));
           m_out_nodes->push_back({val, location});
         }
       }
