@@ -2,7 +2,6 @@
 #define LIBJSONPATH_PATH_H
 
 #include <string_view>
-#include <vector>
 
 #include "libjsonpath/node.hpp"
 #include "libjsonpath/parse.hpp"
@@ -11,10 +10,6 @@
 namespace nb = nanobind;
 
 namespace libjsonpath {
-
-// TODO: remove after update libjsonpath
-using function_signature_map =
-    std::unordered_map<std::string, libjsonpath::FunctionExtensionTypes>;
 
 using function_extension_map = std::unordered_map<std::string, nb::callable>;
 

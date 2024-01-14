@@ -31,3 +31,4 @@ build_bench
 build_benchmark
 .vscode
 .venv*
+.DS_Store

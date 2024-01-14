@@ -509,7 +509,7 @@ private:
       stop = std::min(selector.stop.value(), length);
     }
 
-    // TODO: return start, stp and step
+    // TODO: return start, stop and step
     // TODO: then loop in the caller
     std::vector<std::int64_t> indicies{};
     if (step > 0) {
