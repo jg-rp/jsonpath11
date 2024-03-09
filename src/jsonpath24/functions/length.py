@@ -1,11 +1,12 @@
 """The standard `length` function extension."""
+
 from collections.abc import Sized
 from typing import Union
 
 from jsonpath24 import NOTHING
-from jsonpath24 import Nothing
 from jsonpath24 import ExpressionType
 from jsonpath24 import FilterFunction
+from jsonpath24 import Nothing
 
 
 class Length(FilterFunction):
