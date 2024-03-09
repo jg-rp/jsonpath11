@@ -25,7 +25,7 @@ license = { file = "LICENSE.txt" }
 name = "jsonpath24"
 readme = "README.md"
 requires-python = ">=3.8"
-version = "0.0.1"
+version = "0.1.1"
 
 [project.urls]
 Homepage = "https://github.com/jg-rp/jsonpath24"

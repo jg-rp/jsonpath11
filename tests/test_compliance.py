@@ -3,9 +3,9 @@
 The CTS is a submodule located in /tests/cts. After a git clone, run
 `git submodule update --init` from the root of the repository.
 """
+
 import json
 import operator
-import unittest
 from dataclasses import dataclass
 from typing import Any
 from typing import List
@@ -24,6 +24,7 @@ class Case:
     selector: str
     document: Union[Mapping[str, Any], Sequence[Any], None] = None
     result: Any = None
+    results: Optional[List[Any]] = None
     invalid_selector: Optional[bool] = None
 
 
@@ -56,9 +57,12 @@ def test_compliance(case: Case) -> None:
 
     assert case.document is not None
 
-    test_case = unittest.TestCase()
     rv = jsonpath24.findall(case.selector, case.document)
-    test_case.assertCountEqual(rv, case.result)  # noqa: PT009
+
+    if case.results is not None:
+        assert rv in case.results
+    else:
+        assert rv == case.result
 
 
 @pytest.mark.parametrize("case", invalid_cases(), ids=operator.attrgetter("name"))
